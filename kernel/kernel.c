@@ -6,6 +6,7 @@
 #include "sched.h"
 #include "irq.h"
 #include "systick.h"
+#include "user/user_tasks.h"
 
 extern void arch_cpu_init(void);
 extern void arch_idle(void);
@@ -54,6 +55,11 @@ void kernel_main(void) {
     task_set_idle(idle);
     
     printf("[KERNEL] Idle task created (ID=%d)\n\n", idle->task_id);
+    
+    /* User tasks */
+    extern void user_tasks_init(void);
+    user_tasks_init();
+    printf("[KERNEL] User tasks initialized\n\n");
     
     /* Start system timer */
     systick_start();

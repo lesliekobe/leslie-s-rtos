@@ -11,9 +11,10 @@ OBJDUMP = $(PREFIX)objdump
 SRC_KERNEL = kernel
 SRC_ARCH = arch/arm/cpu/cortex_r52
 SRC_LIBS = lib
+SRC_USER = user
 
 # Include path
-INC = -Iinclude -I$(SRC_ARCH) -I$(SRC_KERNEL)
+INC = -Iinclude -I$(SRC_ARCH) -I$(SRC_KERNEL) -I$(SRC_USER)
 
 # Architecture flags
 ARCH_CFLAGS = -mcpu=cortex-r52 -mthumb -mfloat-abi=hard -mfpu=fpv5-d16
@@ -31,7 +32,10 @@ KERNEL_SRC = $(SRC_KERNEL)/kernel.c $(SRC_KERNEL)/task.c \
 
 ARCH_SRC = $(SRC_ARCH)/gic.c $(SRC_ARCH)/systick.c
 
-LIB_SRC = lib/string.c lib/printf.c lib/malloc.c
+LIB_SRC = lib/string.c lib/printf.c
+
+USER_SRC = $(SRC_USER)/system_monitor.c $(SRC_USER)/temperature_sensor.c \
+           $(SRC_USER)/heartbeat.c $(SRC_USER)/uart_console.c
 
 ASM_SRC = $(SRC_ARCH)/startup.s
 
@@ -39,9 +43,10 @@ ASM_SRC = $(SRC_ARCH)/startup.s
 KERNEL_OBJ = $(KERNEL_SRC:.c=.o)
 ARCH_OBJ = $(ARCH_SRC:.c=.o)
 LIB_OBJ = $(LIB_SRC:.c=.o)
+USER_OBJ = $(USER_SRC:.c=.o)
 ASM_OBJ = $(ASM_SRC:.s=.o)
 
-ALL_OBJ = $(KERNEL_OBJ) $(ARCH_OBJ) $(LIB_OBJ) $(ASM_OBJ)
+ALL_OBJ = $(KERNEL_OBJ) $(ARCH_OBJ) $(LIB_OBJ) $(USER_OBJ) $(ASM_OBJ)
 
 TARGET = rtos.elf
 BIN = rtos.bin
